@@ -14,6 +14,11 @@ class FileStorage:
     """This class manages storage of hbnb models in JSON format"""
     __file_path = 'file.json'
     __objects = {}
+    types = {
+            'BaseModel': BaseModel, 'User': User, 'Place': Place,
+            'State': State, 'City': City, 'Amenity': Amenity,
+            'Review': Review
+        }
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in a spesific class"""
@@ -43,11 +48,7 @@ class FileStorage:
     def reload(self):
         """Loads storage dictionary from file"""
 
-        classes = {
-            'BaseModel': BaseModel, 'User': User, 'Place': Place,
-            'State': State, 'City': City, 'Amenity': Amenity,
-            'Review': Review
-        }
+        classes = FileStorage.types
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
@@ -66,3 +67,43 @@ class FileStorage:
         if key in self.__objects:
             del self.__objects[key]
             self.save()
+
+    def get(self, cls, id):
+        """This method retive one object
+            Args:
+                cls - desired class to look for
+                id - id of the targeted object
+            Returns:
+                The object with set id if found
+        """
+
+        if cls in FileStorage.types:
+            targets = self.all(cls)
+            for key, value in targets.items():
+                try:
+                    className, classId = key.split('.')
+                except:
+                    pass
+                if classId == id:
+                    return value
+            return None
+        else:
+            return None
+
+    def count(self, cls=None):
+        """This method counts the number of objects in storage
+            Args:
+                cls - desired class to count(OPTIONAL)
+            Returns:
+                The number of classes found within storage
+        """
+
+        count = 0
+        if cls in FileStorage.types:
+            lista = self.all(cls)
+            for element in lista:
+                count += 1
+        return count
+
+
+        

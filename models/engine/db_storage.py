@@ -18,6 +18,14 @@ class DBStorage:
     '''
     __engine = None
     __session = None
+    types = {
+            "City": City,
+            "State": State,
+            "User": User,
+            "Place": Place,
+            "Review": Review,
+            "Amenity": Amenity,
+        }
 
     def __init__(self):
         '''
@@ -38,14 +46,7 @@ class DBStorage:
         '''
         query for all objects on the current database session
         '''
-        classes = {
-            "City": City,
-            "State": State,
-            "User": User,
-            "Place": Place,
-            "Review": Review,
-            "Amenity": Amenity,
-        }
+        classes = DBStorage.types
         result = {}
         query_rows = []
 
@@ -96,3 +97,34 @@ class DBStorage:
         when it's time to insert new data, we force it to!
         """
         self.__session.close()
+
+    def get(self, cls, id):
+        """This method retive one object
+            Args:
+                cls - desired class to look for
+                id - id of the targeted object
+            Returns:
+                The object with set id if found
+        """
+
+        if cls in DBStorage.types:
+            target_obj = self.__session.query(cls).filter(cls.id == id).first()
+            return target_obj
+        else:
+            return None
+
+
+    def count(self, cls=None):
+        """This method counts the number of objects in storage
+            Args:
+                cls - desired class to count(OPTIONAL)
+            Returns:
+                The number of classes found within storage
+        """
+
+        count = 0
+        if cls in DBStorage.types:
+            lista = self.all(cls)
+            for element in lista:
+                count += 1
+        return count
