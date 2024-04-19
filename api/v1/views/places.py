@@ -43,7 +43,7 @@ def delete_place(place_id):
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
-    place.delete()
+    storage.delete(place)
     storage.save()
     return make_response(jsonify({}), 200)
 
@@ -55,11 +55,11 @@ def create_place(city_id):
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
-    if not request.get_json():
+    if not request.get_json(silent=True):
         abort(400, description="Not a JSON")
-    if 'user_id' not in request.get_json():
+    if 'user_id' not in request.get_json(silent=True):
         abort(400, description="Missing user_id")
-    if 'name' not in request.get_json():
+    if 'name' not in request.get_json(silent=True):
         abort(400, description="Missing name")
     user = storage.get(User, request.get_json()['user_id'])
     if user is None:
@@ -75,7 +75,7 @@ def update_place(place_id):
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
-    if not request.get_json():
+    if not request.get_json(silent=True):
         abort(400, description="Not a JSON")
     for key, value in request.get_json().items():
         if key not in ['id', 'user_id', 'city_id', 'created_at', 'updated_at']:
