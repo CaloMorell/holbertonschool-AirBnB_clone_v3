@@ -4,6 +4,7 @@ Module handles all default RestFul API actions for City objects
 """
 from api.v1.views import app_views
 from flask import jsonify, abort, request, make_response
+from models import storage
 from models.city import City
 from models.state import State
 
@@ -24,7 +25,7 @@ def get_cities(state_id):
                  strict_slashes=False)
 def get_city(city_id):
     """Return a city"""
-    city = storage.get(City, city_id)
+    city = storage.get(City, city_id) # type: ignore
     if city is None:
         abort(404)
     return jsonify(city.to_dict())
