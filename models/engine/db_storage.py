@@ -96,3 +96,23 @@ class DBStorage:
         when it's time to insert new data, we force it to!
         """
         self.__session.close()
+    
+    def get(self, cls, id):
+        """
+        Retrieve one object
+        """
+        if cls in classes.values():
+            objs = self.__session.query(cls).all()
+            for obj in objs:
+                if obj.id == id:
+                    return obj
+        return None
+
+    def count(self, cls=None):
+        """
+        Count the number of objects in storage
+        """
+        if cls is None:
+            return len(self.all())
+        else:
+            return len(self.all(cls))
