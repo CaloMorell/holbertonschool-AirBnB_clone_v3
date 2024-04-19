@@ -66,7 +66,7 @@ class FileStorage:
         if key in self.__objects:
             del self.__objects[key]
             self.save()
-    
+
     def get(self, cls, id):
         """
         A method to retrieve one object
@@ -85,4 +85,4 @@ class FileStorage:
         if cls is None:
             return len(self.all())
         else:
-            return len(self.all(cls))        
+            return len(self.all(cls))
