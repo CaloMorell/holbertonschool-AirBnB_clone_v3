@@ -14,9 +14,11 @@ def close(exception):
 
     storage.close()
 
+
 @app.errorhandler(404)
 def not_found_error(error):
     return jsonify({"error": "Not found"}), 404
+
 
 if __name__ == '__main__':
     api_host = getenv("HBNB_API_HOST", default='0.0.0.0')
