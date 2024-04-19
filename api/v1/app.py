@@ -16,10 +16,6 @@ def close(exception):
 
 
 if __name__ == '__main__':
-    api_host = '0.0.0.0'
-    api_port = 5000
-    if getenv("HBNB_API_HOST"):
-        api_host = getenv("HBNB_API_HOST")
-    if getenv("HBNB_API_PORT"):
-        api_host = getenv("HBNB_API_PORT")
+    api_host = getenv("HBNB_API_HOST", default='0.0.0.0')
+    api_port = getenv("HBNB_API_PORT", default=5000)
     app.run(host=api_host, port=api_port, threaded=True)
