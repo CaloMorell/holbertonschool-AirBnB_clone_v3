@@ -18,6 +18,14 @@ class DBStorage:
     '''
     __engine = None
     __session = None
+    types = {
+            "City": City,
+            "State": State,
+            "User": User,
+            "Place": Place,
+            "Review": Review,
+            "Amenity": Amenity,
+        }
 
     def __init__(self):
         '''
@@ -38,14 +46,7 @@ class DBStorage:
         '''
         query for all objects on the current database session
         '''
-        classes = {
-            "City": City,
-            "State": State,
-            "User": User,
-            "Place": Place,
-            "Review": Review,
-            "Amenity": Amenity,
-        }
+        classes = DBStorage.types
         result = {}
         query_rows = []
 
@@ -101,6 +102,7 @@ class DBStorage:
         """
         Retrieve one object
         """
+        classes = DBStorage.types
         if cls in classes.values():
             objs = self.__session.query(cls).all()
             for obj in objs:
