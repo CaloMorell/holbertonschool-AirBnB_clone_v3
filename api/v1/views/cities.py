@@ -8,6 +8,7 @@ from models import storage
 from models.city import City
 from models.state import State
 
+
 @app_views.route('/states/<state_id>/cities', methods=['GET'],
                  strict_slashes=False)
 def get_cities(state_id):
@@ -25,7 +26,7 @@ def get_cities(state_id):
                  strict_slashes=False)
 def get_city(city_id):
     """Return a city"""
-    city = storage.get(City, city_id) # type: ignore
+    city = storage.get(City, city_id)  # type: ignore
     if city is None:
         abort(404)
     return jsonify(city.to_dict())
