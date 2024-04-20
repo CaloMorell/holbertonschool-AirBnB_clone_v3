@@ -8,7 +8,6 @@ from models import storage
 from models.user import User
 
 
-
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
 def get_users():
     """Return all users"""
@@ -35,7 +34,7 @@ def delete_user(user_id):
     user = storage.get(User, user_id)
     if user is None:
         abort(404)
-    user.delete()
+    storage.delete(user)
     storage.save()
     return make_response(jsonify({}), 200)
 
@@ -43,11 +42,11 @@ def delete_user(user_id):
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def create_user():
     """Create a user"""
-    if not request.get_json():
+    if not request.get_json(silent=True):
         abort(400, description="Not a JSON")
-    if 'email' not in request.get_json():
+    if 'email' not in request.get_json(silent=True):
         abort(400, description="Missing email")
-    if 'password' not in request.get_json():
+    if 'password' not in request.get_json(silent=True):
         abort(400, description="Missing password")
     user = User(**request.get_json())
     user.save()
@@ -61,7 +60,7 @@ def update_user(user_id):
     user = storage.get(User, user_id)
     if user is None:
         abort(404)
-    if not request.get_json():
+    if not request.get_json(silent=True):
         abort(400, description="Not a JSON")
     for key, value in request.get_json().items():
         if key not in ['id', 'email', 'created_at', 'updated_at']:
