@@ -8,6 +8,7 @@ from models import storage
 from models.city import City
 from models.state import State
 
+
 @app_views.route('/states/<state_id>/cities', methods=['GET'],
                  strict_slashes=False)
 def get_cities(state_id):
@@ -25,7 +26,7 @@ def get_cities(state_id):
                  strict_slashes=False)
 def get_city(city_id):
     """Return a city"""
-    city = storage.get(City, city_id) # type: ignore
+    city = storage.get(City, city_id)  # type: ignore
     if city is None:
         abort(404)
     return jsonify(city.to_dict())
@@ -38,7 +39,7 @@ def delete_city(city_id):
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
-    city.delete()
+    storage.delete(city)
     storage.save()
     return make_response(jsonify({}), 200)
 
@@ -50,9 +51,9 @@ def create_city(state_id):
     state = storage.get(State, state_id)
     if state is None:
         abort(404)
-    if not request.get_json():
+    if not request.get_json(silent=True):
         abort(400, description="Not a JSON")
-    if 'name' not in request.get_json():
+    if 'name' not in request.get_json(silent=True):
         abort(400, description="Missing name")
     city = City(**request.get_json(), state_id=state_id)
     city.save()
@@ -66,7 +67,7 @@ def update_city(city_id):
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
-    if not request.get_json():
+    if not request.get_json(silent=True):
         abort(400, description="Not a JSON")
     for key, value in request.get_json().items():
         if key not in ['id', 'state_id', 'created_at', 'updated_at']:
